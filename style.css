@@ -99,10 +99,6 @@ body {
     transform: scaleX(-1);
 }
 
-#cleaner {
-    display: none;
-}
-
 /* 共通の流動物ベース */
 .obstacle, .item {
     position: absolute;
@@ -171,7 +167,7 @@ body {
     }
 }
 
-/* オーバーレイ画面 */
+/* オーバーレイ画面（スタート・ゲームオーバー兼用） */
 #overlay {
     position: absolute;
     top: 0;
@@ -194,15 +190,18 @@ body {
     pointer-events: auto;
 }
 
+/* ゲームタイトル（センタリングを完全適用） */
 #game-title {
     color: #ffd273;
     font-size: 46px;
     margin-bottom: 5px;
     text-shadow: 0 0 12px rgba(255, 210, 115, 0.6);
     font-weight: bold;
+    text-align: center; /* タイトルテキストを中央揃えに */
+    width: 100%;        /* 横幅いっぱいに広げて中央を計算 */
 }
 
-/* タイトル画面中央の町田さんグラフィック（新規追加） */
+/* タイトル画面中央の町田さんグラフィック */
 #title-player-display {
     width: 120px;
     height: 120px;
@@ -216,17 +215,22 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    transform: scaleX(-1); /* 右向きにして統一 */
+    transform: scaleX(-1); 
 }
 @keyframes titleFloat {
     0% { transform: translateY(0px); }
     100% { transform: translateY(-12px); }
 }
 
+/* 中央ハイスコアテキスト */
 #game-message {
-    color: #bbb;
-    font-size: 16px;
+    color: #ffd273;
+    font-size: 20px;
+    font-weight: bold;
     margin-bottom: 20px;
+    text-shadow: 0 0 8px rgba(255, 210, 115, 0.4);
+    text-align: center; 
+    width: 100%;        
 }
 
 /* ボタン並び用コンテナ */
