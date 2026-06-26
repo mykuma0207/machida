@@ -33,12 +33,15 @@ let gameLoopId;
 let spawnTimerId;
 let backgroundX = 0;
 
+// 起動時にローカルストレージからハイスコアを読み込む
 if (localStorage.getItem('cleaner_highscore')) {
     highscore = parseInt(localStorage.getItem('cleaner_highscore'));
 }
 highscoreDisplay.textContent = highscore;
 
-// 【初期設定】起動時は、プレイ用の町田さんオブジェクトを非表示にしておく
+// 【★ここを修正】ページを開いた瞬間（更新時）にも、中央のテキストに最新のハイスコアを確実に反映させます！
+gameMessage.innerHTML = `HIGH SCORE: <span>${highscore}</span>`;
+
 player.classList.add('hidden-player');
 
 howToBtn.addEventListener('click', () => {
@@ -73,7 +76,6 @@ function startGame() {
     isThrusting = false;
     isInvincible = false;
     
-    // 【変更箇所】ゲームスタート時に、本番用の町田さんを復活させる
     player.classList.remove('hidden-player');
     player.classList.remove('invincible');
     
@@ -301,11 +303,10 @@ function gameOver() {
         localStorage.setItem('cleaner_highscore', highscore);
     }
 
-    // 【変更箇所】ゲームオーバー時、プレイ用の町田さんを一旦隠す（中央ディスプレイを映すため）
     player.classList.add('hidden-player');
 
     gameTitle.textContent = 'GAME OVER';
-    gameMessage.innerHTML = `最終スコア: <span style="color:#e17846; font-weight:bold;">${score}</span><br><span style="font-size:16px; color:#aaa;">ハイスコア: ${highscore}</span>`;
+    gameMessage.innerHTML = `最終スコア: <span style="color:#fff; font-weight:bold;">${score}</span><br><span style="font-size:16px; color:#aaa; font-weight:normal;">HIGH SCORE: ${highscore}</span>`;
     startBtn.textContent = 'RETRY';
     overlay.classList.add('visible');
 }
