@@ -33,13 +33,14 @@ let gameLoopId;
 let spawnTimerId;
 let backgroundX = 0;
 
-// 起動時にローカルストレージからハイスコアを読み込む
+// 【新規追加】現在の画面状態（'title' or 'gameover'）を管理するフラグ
+let overlayState = 'title';
+
 if (localStorage.getItem('cleaner_highscore')) {
     highscore = parseInt(localStorage.getItem('cleaner_highscore'));
 }
 highscoreDisplay.textContent = highscore;
 
-// 【★ここを修正】ページを開いた瞬間（更新時）にも、中央のテキストに最新のハイスコアを確実に反映させます！
 gameMessage.innerHTML = `HIGH SCORE: <span>${highscore}</span>`;
 
 player.classList.add('hidden-player');
@@ -65,7 +66,16 @@ container.addEventListener('mouseup', () => isThrusting = false);
 container.addEventListener('touchstart', () => isThrusting = true);
 container.addEventListener('touchend', () => isThrusting = false);
 
-startBtn.addEventListener('click', startGame);
+// ボタンクリック時のイベントを条件分岐するように修正
+startBtn.addEventListener('click', () => {
+    if (overlayState === 'title') {
+        // タイトル画面ならゲーム開始
+        startGame();
+    } else if (overlayState === 'gameover') {
+        // ゲームオーバー画面ならタイトルに戻す
+        backToTitle();
+    }
+});
 
 function startGame() {
     playerY = 150;
@@ -94,6 +104,16 @@ function startGame() {
 
     gameLoopId = requestAnimationFrame(updateGame);
     spawnObjects();
+}
+
+// 【新規追加】ゲームオーバーからタイトル画面に戻る関数
+function backToTitle() {
+    overlayState = 'title';
+    
+    // タイトル画面の表示に書き換える
+    gameTitle.textContent = 'ルンバライダー町田';
+    gameMessage.innerHTML = `HIGH SCORE: <span>${highscore}</span>`;
+    startBtn.textContent = 'START GAME';
 }
 
 function updateLifeDisplay() {
@@ -305,8 +325,11 @@ function gameOver() {
 
     player.classList.add('hidden-player');
 
+    // 【★ここを修正】ステータスをgameoverに変え、ボタンの文字を「トップへ」に変更
+    overlayState = 'gameover';
+    
     gameTitle.textContent = 'GAME OVER';
     gameMessage.innerHTML = `最終スコア: <span style="color:#fff; font-weight:bold;">${score}</span><br><span style="font-size:16px; color:#aaa; font-weight:normal;">HIGH SCORE: ${highscore}</span>`;
-    startBtn.textContent = 'RETRY';
+    startBtn.textContent = 'トップへ'; // RETRYから変更
     overlay.classList.add('visible');
 }
