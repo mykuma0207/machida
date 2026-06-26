@@ -325,7 +325,7 @@ function gameOver() {
 
     player.classList.add('hidden-player');
 
-    // ステータスをgameoverに変え、ボタンの文字を「トップへ」に変更
+    // 【★ここを修正】ステータスをgameoverに変え、ボタンの文字を「トップへ」に変更
     overlayState = 'gameover';
     
     gameTitle.textContent = 'GAME OVER';
