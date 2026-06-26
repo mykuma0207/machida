@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ルンバライダーＭ田</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- UIエリア（スコア、ハイスコア、ライフを表示） -->
+        <div id="ui-container">
+            <div id="score-board">SCORE: <span id="score">0</span></div>
+            <div id="highscore-board">HIGH: <span id="highscore">0</span></div>
+            <div id="life-board">LIFE: <span id="life-hearts">❤️❤️❤️</span></div>
+        </div>
+        
+        <!-- プレイヤー（町田さんの画像） -->
+        <div id="player">
+            <div id="man">
+                <img src="matida.png" alt="player" id="player-img">
+            </div>
+            <div id="cleaner"></div>
+        </div>
 
+        <!-- スタート・ゲームオーバー画面（中央配置用の町田さんを内部に追加） -->
+        <div id="overlay" class="visible">
+            <h1 id="game-title">ルンバライダーＭ田</h1>
+            
+            <!-- タイトル画面専用の町田さんディスプレイ（新規追加） -->
+            <div id="title-player-display">
+                <img src="matida.png" alt="title player">
+            </div>
+
+            <p id="game-message">画面クリック または スペースキー で上昇</p>
+            <div class="menu-buttons">
+                <button id="start-btn">START GAME</button>
+                <button id="how-to-btn">遊び方</button>
+            </div>
+        </div>
+
+        <!-- 遊び方ポップアップ画面 -->
+        <div id="how-to-modal" class="hidden">
+            <div class="modal-content">
+                <button id="close-modal-btn">×</button>
+                <h2>🎮 遊び方ルール</h2>
+                <ul>
+                    <li><strong>上昇：</strong> 画面長押し / スペースキー長押し</li>
+                    <li><strong>下降：</strong> 離すと自動で下降します</li>
+                    <li><strong>障害物：</strong> 「ゴミ箱」や「植木鉢」で1ダメージ</li>
+                    <li><strong>うまい棒：</strong> ライフ1回復！満タン時はスコア+10点！</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
