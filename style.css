@@ -1,1 +1,343 @@
+/* 全体リセット */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
 
+body {
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+    overflow: hidden;
+}
+
+/* ゲーム画面のコンテナ */
+#game-container {
+    position: relative;
+    width: 800px;
+    height: 400px;
+    background: linear-gradient(to right, 
+        #d7a15c 0px, #d7a15c 78px, 
+        #b27e3a 79px, #b27e3a 80px,
+        #cca26c 81px, #cca26c 158px,
+        #9c6a2a 159px, #9c6a2a 160px
+    );
+    background-size: 160px 100%;
+    border: 4px solid #6e471b;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* UI表示エリア */
+#ui-container {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    z-index: 10;
+}
+
+#score-board, #highscore-board, #life-board {
+    color: #4a2e0b;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+}
+
+#life-hearts {
+    letter-spacing: 2px;
+}
+
+/* プレイヤー（本体） */
+#player {
+    position: absolute;
+    left: 100px;
+    top: 200px;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.05s linear;
+}
+
+/* プレイ中の町田さん非表示クラス（タイトル画面表示中に使用） */
+#player.hidden-player {
+    display: none !important;
+}
+
+/* ダメージ時の無敵アニメーション */
+.invincible {
+    animation: blink 0.1s infinite alternate;
+}
+@keyframes blink {
+    0% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+
+#man {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#player-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scaleX(-1);
+}
+
+#cleaner {
+    display: none;
+}
+
+/* 共通の流動物ベース */
+.obstacle, .item {
+    position: absolute;
+    right: -120px;
+}
+
+/* 障害物共通の画像設定 */
+.obstacle-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 1. 地面の植木鉢 */
+.obstacle.type-bottom {
+    bottom: 0px;
+    width: 90px; 
+    height: 75px; 
+}
+
+/* 2. 空中のゴミ箱 */
+.obstacle.type-top {
+    top: 10px;      
+    width: 65px;    
+    height: 80px;   
+}
+
+/* 3. うまい棒 */
+.item.umaibo {
+    width: 80px;  
+    height: 80px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: floatItem 1s infinite alternate ease-in-out;
+}
+.item-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: rotate(-90deg); 
+}
+@keyframes floatItem {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+/* ポップアップテキスト演出 */
+.popup-text {
+    position: absolute;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    pointer-events: none;
+    z-index: 15;
+    animation: floatUpFade 0.8s ease-out forwards;
+}
+@keyframes floatUpFade {
+    0% {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-40px);
+        opacity: 0;
+    }
+}
+
+/* オーバーレイ画面 */
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#game-title {
+    color: #ffd273;
+    font-size: 46px;
+    margin-bottom: 5px;
+    text-shadow: 0 0 12px rgba(255, 210, 115, 0.6);
+    font-weight: bold;
+}
+
+/* タイトル画面中央の町田さんグラフィック（新規追加） */
+#title-player-display {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: titleFloat 1.5s infinite alternate ease-in-out;
+}
+#title-player-display img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: scaleX(-1); /* 右向きにして統一 */
+}
+@keyframes titleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-12px); }
+}
+
+#game-message {
+    color: #bbb;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* ボタン並び用コンテナ */
+.menu-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+#start-btn, #how-to-btn {
+    padding: 12px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+#start-btn {
+    color: #fff;
+    background-color: #c86432;
+    box-shadow: 0 4px 15px rgba(200, 100, 50, 0.4);
+}
+
+#how-to-btn {
+    color: #fff;
+    background-color: #4a5568;
+    box-shadow: 0 4px 15px rgba(74, 85, 104, 0.4);
+}
+
+#start-btn:hover, #how-to-btn:hover {
+    transform: scale(1.05);
+}
+
+/* 遊び方ポップアップ */
+#how-to-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 30;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+#how-to-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    position: relative; 
+    background-color: #2d3748;
+    color: #fff;
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #ffd273;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.modal-content h2 {
+    color: #ffd273;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.modal-content ul {
+    text-align: left;
+    list-style-type: none;
+}
+
+.modal-content li {
+    font-size: 13px; 
+    line-height: 1.5;
+    margin-bottom: 8px;
+    padding-left: 15px;
+    position: relative;
+}
+
+.modal-content li::before {
+    content: "•";
+    color: #ffd273;
+    font-size: 18px;
+    position: absolute;
+    left: 0;
+    top: -2px;
+}
+
+#close-modal-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    font-weight: normal;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 5px;
+    transition: transform 0.1s, color 0.2s;
+}
+#close-modal-btn:hover {
+    color: #ffd273;
+    transform: scale(1.1) !important;
+}
